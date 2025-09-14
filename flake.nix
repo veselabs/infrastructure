@@ -15,6 +15,7 @@
       perSystem = {
         pkgs,
         self',
+        system,
         ...
       }: let
         treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs {
@@ -32,6 +33,7 @@
             {
               languages = {
                 nix.enable = true;
+                terraform.enable = true;
               };
 
               packages = [
@@ -57,6 +59,11 @@
 
         formatter = treefmtEval.config.build.wrapper;
         checks.formatting = treefmtEval.config.build.check self;
+
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
       };
     });
 }
