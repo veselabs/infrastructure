@@ -23,6 +23,8 @@
 
           programs = {
             alejandra.enable = true;
+            terraform.enable = true;
+            terraform.package = pkgs.terraform;
           };
         };
       in {
