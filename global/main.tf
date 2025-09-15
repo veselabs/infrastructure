@@ -1,3 +1,11 @@
+provider "github" {
+  owner = "veselabs"
+}
+
+provider "aws" {
+  region = "eu-north-1"
+}
+
 resource "github_repository" "infrastructure" {
   name       = "infrastructure"
   visibility = "private"
