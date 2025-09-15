@@ -1,13 +1,7 @@
-terraform {
-  required_providers {
-    github = {
-      source  = "integrations/github"
-      version = "~> 6.0"
-    }
+provider "github" {
+  owner = "veselabs"
+}
 
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.0"
-    }
-  }
+provider "aws" {
+  region = "eu-north-1"
 }
