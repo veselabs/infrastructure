@@ -4,4 +4,4 @@
 /result
 /result-*
 
-/.terraform/
+.terraform/
