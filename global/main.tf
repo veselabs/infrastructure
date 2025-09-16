@@ -26,6 +26,13 @@ module "s3_bucket_terraform_state" {
   }
 }
 
+module "iam_oidc_provider" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-oidc-provider"
+  version = "~> 6.2.1"
+
+  url = "https://token.actions.githubusercontent.com"
+}
+
 module "iam_role_github_oidc" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role"
   version = "~> 6.2.1"
