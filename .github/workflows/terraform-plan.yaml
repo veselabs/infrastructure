@@ -1,3 +1,5 @@
+name: Terraform Plan
+
 on:
   # pull_request:
   #   branches: [master]
@@ -5,19 +7,35 @@ on:
     branches: [master]
 
 permissions:
+  actions: read
+  contents: read
   id-token: write
 
 jobs:
-  run_job_with_aws:
+  plan:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@main # Or a specific version
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::519848832156:role/gha-infrastructure
           aws-region: eu-north-1
 
-      - name: Get caller identity
-        run: |
-          aws sts get-caller-identity
+      - name: Install Nix
+        uses: nixbuild/nix-quick-install-action@v33
+
+      - name: Cache Nix Store
+        uses: nix-community/cache-nix-action@v6
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          purge: true
+          purge-prefixes: nix-${{ runner.os }}-
+          purge-primary-key: never
+
+      - name: Initialize Terraform
+        run: nix develop .#ci -c terraform -chdir=global init
