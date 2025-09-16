@@ -25,3 +25,15 @@ module "s3_bucket_terraform_state" {
     enabled = true
   }
 }
+
+module "iam_role_github_oidc" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role"
+  version = "~> 6.2.1"
+
+  enable_github_oidc = true
+
+  name            = "gha-infrastructure"
+  use_name_prefix = false
+
+  oidc_wildcard_subjects = ["veselabs/infrastructure:ref:refs/heads/master"]
+}
