@@ -23,6 +23,7 @@
 
           programs = {
             alejandra.enable = true;
+            prettier.enable = true;
             terraform.enable = true;
             terraform.package = pkgs.terraform;
           };
