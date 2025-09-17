@@ -83,7 +83,7 @@ jobs:
         run: nix develop .#ci -c terraform -chdir=global plan -out=./plan
 
       - name: Show Plan
-        run: nix develop .#ci -c terraform -chdir=global show ./plan >> ${GITHUB_STEP_SUMMARY}
+        run: nix develop .#ci -c terraform -chdir=global show ./plan
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4
