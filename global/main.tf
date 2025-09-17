@@ -50,6 +50,7 @@ module "iam_role_github_oidc" {
       effect = "Allow"
       actions = [
         "s3:GetObject",
+        "s3:PutObject",
       ]
       resources = [
         "${module.s3_bucket_terraform_state.s3_bucket_arn}/*"
