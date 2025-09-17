@@ -80,7 +80,7 @@ jobs:
         run: nix develop .#ci -c terraform -chdir=global init
 
       - name: Create Plan
-        run: nix develop .#ci -c terraform -chdir=global plan > ./plan
+        run: nix develop .#ci -c terraform -chdir=global plan -out=./plan
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4
