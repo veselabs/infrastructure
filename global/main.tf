@@ -21,6 +21,11 @@ resource "github_repository" "infrastructure" {
   visibility = "public"
 }
 
+resource "github_repository" "test" {
+  name       = "test"
+  visibility = "private"
+}
+
 resource "github_repository_environment" "infrastructure_global" {
   environment = "global"
   repository  = github_repository.infrastructure.name
