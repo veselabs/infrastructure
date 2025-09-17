@@ -43,4 +43,17 @@ module "iam_role_github_oidc" {
   use_name_prefix = false
 
   oidc_wildcard_subjects = ["veselabs/infrastructure:ref:refs/heads/master"]
+
+  create_inline_policy = true
+  inline_policy_permissions = {
+    TerraformStateBucketAccess = {
+      effect = "Allow"
+      actions = [
+        "s3:GetObject",
+      ]
+      resources = [
+        "${module.s3_bucket_terraform_state.s3_bucket_arn}/*"
+      ]
+    }
+  }
 }
