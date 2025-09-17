@@ -33,6 +33,12 @@
 
           modules = [
             {
+              env = {
+                AWS_ACCESS_KEY_ID = "op://veselabs/AWS Root Access Key/username";
+                AWS_SECRET_ACCESS_KEY = "op://veselabs/AWS Root Access Key/credential";
+                GITHUB_TOKEN = "op://veselabs/GitHub Personal Access Token/token";
+              };
+
               languages = {
                 nix.enable = true;
                 terraform.enable = true;
