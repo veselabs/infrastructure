@@ -12,9 +12,33 @@ resource "github_membership" "veselyn" {
   role     = "admin"
 }
 
+data "github_user" "veselyn" {
+  username = "veselyn"
+}
+
 resource "github_repository" "infrastructure" {
   name       = "infrastructure"
   visibility = "public"
+}
+
+resource "github_repository_environment" "infrastructure_global" {
+  environment = "global"
+  repository  = github_repository.infrastructure.name
+
+  reviewers {
+    users = [data.github_user.veselyn.id]
+  }
+
+  deployment_branch_policy {
+    protected_branches     = false
+    custom_branch_policies = true
+  }
+}
+
+resource "github_repository_environment_deployment_policy" "infrastructure_global" {
+  repository     = github_repository.infrastructure.name
+  environment    = github_repository_environment.infrastructure_global.environment
+  branch_pattern = "master"
 }
 
 module "s3_bucket_terraform_state" {
