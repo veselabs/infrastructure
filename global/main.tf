@@ -19,6 +19,7 @@ data "github_user" "veselyn" {
 resource "github_repository" "infrastructure" {
   name       = "infrastructure"
   visibility = "public"
+  auto_init  = true
 }
 
 resource "github_repository_environment" "infrastructure_global" {
