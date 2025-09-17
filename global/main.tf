@@ -44,17 +44,7 @@ module "iam_role_github_oidc" {
 
   oidc_wildcard_subjects = ["veselabs/infrastructure:ref:refs/heads/master"]
 
-  create_inline_policy = true
-  inline_policy_permissions = {
-    TerraformStateBucketAccess = {
-      effect = "Allow"
-      actions = [
-        "s3:GetObject",
-        "s3:PutObject",
-      ]
-      resources = [
-        "${module.s3_bucket_terraform_state.s3_bucket_arn}/*"
-      ]
-    }
+  policies = {
+    AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
   }
 }
