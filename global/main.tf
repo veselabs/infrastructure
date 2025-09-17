@@ -6,6 +6,11 @@ provider "aws" {
   region = "eu-north-1"
 }
 
+resource "github_membership" "veselyn" {
+  username = "veselyn"
+  role     = "admin"
+}
+
 resource "github_repository" "infrastructure" {
   name       = "infrastructure"
   visibility = "private"
