@@ -1,5 +1,6 @@
 provider "github" {
   owner = "veselabs"
+  app_auth {}
 }
 
 provider "aws" {
