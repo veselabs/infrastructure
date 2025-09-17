@@ -22,6 +22,12 @@ resource "github_repository" "infrastructure" {
   auto_init  = true
 }
 
+resource "github_branch_default" "default" {
+  repository = github_repository.infrastructure.name
+  branch     = "master"
+  rename     = true
+}
+
 resource "github_repository_environment" "infrastructure_global" {
   environment = "global"
   repository  = github_repository.infrastructure.name
