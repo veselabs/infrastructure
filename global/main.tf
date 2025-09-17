@@ -13,7 +13,7 @@ resource "github_membership" "veselyn" {
 
 resource "github_repository" "infrastructure" {
   name       = "infrastructure"
-  visibility = "private"
+  visibility = "public"
 }
 
 module "s3_bucket_terraform_state" {
