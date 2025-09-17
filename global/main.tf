@@ -48,7 +48,10 @@ module "iam_role_github_oidc" {
   name            = "gha-infrastructure"
   use_name_prefix = false
 
-  oidc_wildcard_subjects = ["veselabs/infrastructure:ref:refs/heads/master"]
+  oidc_wildcard_subjects = [
+    "veselabs/infrastructure:ref:refs/heads/master",
+    "veselabs/infrastructure:environment:global",
+  ]
 
   policies = {
     AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
