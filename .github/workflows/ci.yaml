@@ -1,8 +1,10 @@
-name: Terraform
+name: CI
 
 on:
-  push:
+  pull_request:
     branches: [master]
+  merge_group:
+    types: [checks_requested]
 
 permissions:
   actions: read
@@ -91,45 +93,11 @@ jobs:
           name: plan-${{ github.sha }}
           path: ./global/plan
 
-  apply:
-    name: Apply
+  ci:
+    name: CI
     runs-on: ubuntu-latest
-
-    environment: global
-
     needs:
+      - validate
       - plan
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
-        with:
-          role-to-assume: arn:aws:iam::519848832156:role/gha-infrastructure
-          aws-region: eu-north-1
-
-      - name: Install Nix
-        uses: nixbuild/nix-quick-install-action@v33
-
-      - name: Cache Nix Store
-        uses: nix-community/cache-nix-action@v6
-        with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-
-          purge: true
-          purge-prefixes: nix-${{ runner.os }}-
-          purge-primary-key: never
-
-      - name: Initialize Terraform
-        run: nix develop .#ci -c terraform -chdir=global init
-
-      - name: Download Plan Artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: plan-${{ github.sha }}
-          path: ./global
-
-      - name: Apply Plan
-        run: nix develop .#ci -c terraform -chdir=global apply -auto-approve ./plan
+      - run: "true"
