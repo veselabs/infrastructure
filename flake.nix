@@ -37,7 +37,9 @@
               env = {
                 AWS_ACCESS_KEY_ID = "op://veselabs/AWS Root Access Key/username";
                 AWS_SECRET_ACCESS_KEY = "op://veselabs/AWS Root Access Key/credential";
-                GITHUB_TOKEN = "op://veselabs/GitHub Personal Access Token/token";
+                GITHUB_APP_ID = "op://veselabs/GitHub App Organization/id";
+                GITHUB_APP_INSTALLATION_ID = "op://veselabs/GitHub App Organization/installation_id";
+                GITHUB_APP_PEM_FILE = "op://veselabs/GitHub App Private Key/private key";
               };
 
               languages = {
