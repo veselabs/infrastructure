@@ -28,6 +28,37 @@ resource "github_branch_default" "default" {
   rename     = true
 }
 
+
+resource "github_repository_ruleset" "infrastructure" {
+  name        = "master"
+  repository  = github_repository.infrastructure.name
+  target      = "branch"
+  enforcement = "active"
+
+  conditions {
+    ref_name {
+      include = ["refs/heads/master"]
+      exclude = []
+    }
+  }
+
+  rules {
+    merge_queue {}
+
+    pull_request {
+      dismiss_stale_reviews_on_push   = true
+      require_last_push_approval      = true
+      required_approving_review_count = 1
+    }
+
+    required_status_checks {
+      required_check {
+        context = "CI"
+      }
+    }
+  }
+}
+
 resource "github_repository_environment" "infrastructure_global" {
   environment = "global"
   repository  = github_repository.infrastructure.name
