@@ -92,8 +92,8 @@ jobs:
           name: plan-${{ github.sha }}
           path: ./global/plan
 
-  ci:
-    name: CI
+  succeed:
+    name: Succeed
     runs-on: ubuntu-latest
     needs:
       - validate
