@@ -21,6 +21,7 @@ concurrency:
 jobs:
   ci:
     uses: ./.github/workflows/ci.yaml
+    secrets: inherit
 
   apply:
     name: Apply
