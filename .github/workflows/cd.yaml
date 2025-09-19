@@ -20,6 +20,7 @@ concurrency:
 
 jobs:
   ci:
+    name: CI
     uses: ./.github/workflows/ci.yaml
 
   apply:
