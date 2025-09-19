@@ -53,7 +53,7 @@ resource "github_repository_ruleset" "infrastructure" {
 
     required_status_checks {
       required_check {
-        context = "CI"
+        context = "succeed"
       }
     }
   }
