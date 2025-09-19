@@ -17,9 +17,10 @@ data "github_user" "veselyn" {
 }
 
 resource "github_repository" "infrastructure" {
-  name       = "infrastructure"
-  visibility = "public"
-  auto_init  = true
+  name                   = "infrastructure"
+  visibility             = "public"
+  auto_init              = true
+  delete_branch_on_merge = true
 }
 
 resource "github_branch_default" "default" {
@@ -43,7 +44,7 @@ resource "github_repository_ruleset" "infrastructure" {
   }
 
   bypass_actors {
-    actor_id    = 1
+    actor_id    = 0
     actor_type  = "OrganizationAdmin"
     bypass_mode = "pull_request"
   }
