@@ -19,11 +19,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  ci:
+    uses: ./.github/workflows/ci.yaml
+
   apply:
     name: Apply
     runs-on: ubuntu-latest
-
     environment: global
+    needs: [ci]
 
     steps:
       - name: Checkout
