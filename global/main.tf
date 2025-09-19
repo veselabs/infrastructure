@@ -21,6 +21,9 @@ resource "github_repository" "infrastructure" {
   visibility             = "public"
   auto_init              = true
   delete_branch_on_merge = true
+  allow_merge_commit     = true
+  allow_squash_merge     = false
+  allow_rebase_merge     = false
 }
 
 resource "github_branch_default" "default" {
@@ -50,7 +53,9 @@ resource "github_repository_ruleset" "infrastructure" {
   }
 
   rules {
-    merge_queue {}
+    merge_queue {
+      merge_method = "MERGE"
+    }
 
     pull_request {
       dismiss_stale_reviews_on_push   = true
