@@ -17,9 +17,10 @@ data "github_user" "veselyn" {
 }
 
 resource "github_repository" "infrastructure" {
-  name       = "infrastructure"
-  visibility = "public"
-  auto_init  = true
+  name                   = "infrastructure"
+  visibility             = "public"
+  auto_init              = true
+  delete_branch_on_merge = true
 }
 
 resource "github_branch_default" "default" {
