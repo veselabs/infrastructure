@@ -146,4 +146,12 @@ module "iam_role_github_oidc" {
   policies = {
     AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
   }
+
+  create_inline_policy = true
+  inline_policy_permissions = {
+    DenyPlanUpgrade = {
+      effect : "Deny",
+      actions = ["freetier:UpgradeAccountPlan"]
+    }
+  }
 }
