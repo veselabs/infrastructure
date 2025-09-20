@@ -20,6 +20,9 @@ env:
 jobs:
   validate:
     name: Validate
+    strategy:
+      matrix:
+        environment: [organization, development]
     runs-on: ubuntu-latest
 
     steps:
@@ -45,13 +48,18 @@ jobs:
           purge-primary-key: never
 
       - name: Initialize Terraform
-        run: nix develop .#ci -c terraform -chdir=global init
+        working-directory: ./environments/${{ matrix.environment }}
+        run: nix develop .#ci -c terraform init
 
       - name: Validate Terraform
-        run: nix develop .#ci -c terraform -chdir=global validate
+        working-directory: ./environments/${{ matrix.environment }}
+        run: nix develop .#ci -c terraform validate
 
   plan:
     name: Plan
+    strategy:
+      matrix:
+        environment: [organization, development]
     runs-on: ubuntu-latest
     needs: [validate]
 
@@ -78,19 +86,22 @@ jobs:
           purge-primary-key: never
 
       - name: Initialize Terraform
-        run: nix develop .#ci -c terraform -chdir=global init
+        working-directory: ./environments/${{ matrix.environment }}
+        run: nix develop .#ci -c terraform init
 
       - name: Create Plan
-        run: nix develop .#ci -c terraform -chdir=global plan -out=./plan
+        working-directory: ./environments/${{ matrix.environment }}
+        run: nix develop .#ci -c terraform plan -out=./plan
 
       - name: Show Plan
-        run: nix develop .#ci -c terraform -chdir=global show ./plan
+        working-directory: ./environments/${{ matrix.environment }}
+        run: nix develop .#ci -c terraform show ./plan
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: plan-${{ github.sha }}
-          path: ./global/plan
+          name: plan-${{ matrix.environment }}-${{ github.sha }}
+          path: ./environments/${{ matrix.environment }}/plan
 
   succeed:
     name: Succeed

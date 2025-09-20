@@ -26,8 +26,11 @@ jobs:
 
   apply:
     name: Apply
+    strategy:
+      matrix:
+        environment: [organization, development]
     runs-on: ubuntu-latest
-    environment: global
+    environment: ${{ matrix.environment }}
     needs: [ci]
 
     steps:
@@ -53,13 +56,15 @@ jobs:
           purge-primary-key: never
 
       - name: Initialize Terraform
-        run: nix develop .#ci -c terraform -chdir=global init
+        working-directory: ./environments/${{ matrix.environment }}
+        run: nix develop .#ci -c terraform init
 
       - name: Download Plan Artifact
         uses: actions/download-artifact@v5
         with:
-          name: plan-${{ github.sha }}
-          path: ./global
+          name: plan-${{ matrix.environment }}-${{ github.sha }}
+          path: ./environments/${{ matrix.environment }}
 
       - name: Apply Plan
-        run: nix develop .#ci -c terraform -chdir=global apply -auto-approve ./plan
+        working-directory: ./environments/${{ matrix.environment }}
+        run: nix develop .#ci -c terraform apply -auto-approve ./plan
