@@ -32,7 +32,6 @@ resource "github_branch_default" "default" {
   rename     = true
 }
 
-
 resource "github_repository_ruleset" "infrastructure" {
   name        = "master"
   repository  = github_repository.infrastructure.name
@@ -71,8 +70,8 @@ resource "github_repository_ruleset" "infrastructure" {
   }
 }
 
-resource "github_repository_environment" "infrastructure_global" {
-  environment = "global"
+resource "github_repository_environment" "infrastructure_organization" {
+  environment = "organization"
   repository  = github_repository.infrastructure.name
 
   reviewers {
@@ -85,9 +84,29 @@ resource "github_repository_environment" "infrastructure_global" {
   }
 }
 
-resource "github_repository_environment_deployment_policy" "infrastructure_global" {
+resource "github_repository_environment" "infrastructure_development" {
+  environment = "development"
+  repository  = github_repository.infrastructure.name
+
+  reviewers {
+    users = [data.github_user.veselyn.id]
+  }
+
+  deployment_branch_policy {
+    protected_branches     = false
+    custom_branch_policies = true
+  }
+}
+
+resource "github_repository_environment_deployment_policy" "infrastructure_organization" {
   repository     = github_repository.infrastructure.name
-  environment    = github_repository_environment.infrastructure_global.environment
+  environment    = github_repository_environment.infrastructure_organization.environment
+  branch_pattern = "master"
+}
+
+resource "github_repository_environment_deployment_policy" "infrastructure_development" {
+  repository     = github_repository.infrastructure.name
+  environment    = github_repository_environment.infrastructure_development.environment
   branch_pattern = "master"
 }
 
