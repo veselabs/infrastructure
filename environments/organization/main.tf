@@ -150,8 +150,9 @@ module "iam_role_github_oidc" {
   create_inline_policy = true
   inline_policy_permissions = {
     DenyPlanUpgrade = {
-      effect : "Deny",
-      actions = ["freetier:UpgradeAccountPlan"]
+      effect    = "Deny",
+      actions   = ["freetier:UpgradeAccountPlan"]
+      resources = ["*"]
     }
   }
 }
