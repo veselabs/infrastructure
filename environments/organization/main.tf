@@ -58,8 +58,8 @@ resource "github_repository_ruleset" "infrastructure" {
 
     pull_request {
       dismiss_stale_reviews_on_push   = true
-      require_last_push_approval      = true
-      required_approving_review_count = 1
+      require_last_push_approval      = false # true
+      required_approving_review_count = 0     # 1
     }
 
     required_status_checks {
