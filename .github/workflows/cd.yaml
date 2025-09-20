@@ -28,7 +28,7 @@ jobs:
     name: Apply
     strategy:
       matrix:
-        environment: [global, development]
+        environment: [organization, development]
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
     needs: [ci]

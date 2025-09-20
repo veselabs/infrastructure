@@ -22,7 +22,7 @@ jobs:
     name: Validate
     strategy:
       matrix:
-        environment: [global, development]
+        environment: [organization, development]
     runs-on: ubuntu-latest
 
     steps:
@@ -59,7 +59,7 @@ jobs:
     name: Plan
     strategy:
       matrix:
-        environment: [global, development]
+        environment: [organization, development]
     runs-on: ubuntu-latest
     needs: [validate]
 
