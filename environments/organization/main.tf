@@ -21,10 +21,12 @@ module "github_repositories" {
 
   for_each = {
     infrastructure = { environments = ["organization", "development"] }
+    issues         = { has_issues = true }
   }
 
   name           = each.key
   default_branch = local.default_branch
+  has_issues     = try(each.value.has_issues, false)
   environments   = try(each.value.environments, [])
 }
 
