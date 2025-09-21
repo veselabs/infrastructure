@@ -82,8 +82,8 @@ resource "github_repository_environment" "infrastructure_organization" {
   }
 
   deployment_branch_policy {
-    protected_branches     = false
-    custom_branch_policies = true
+    protected_branches     = true
+    custom_branch_policies = false
   }
 }
 
@@ -96,21 +96,9 @@ resource "github_repository_environment" "infrastructure_development" {
   }
 
   deployment_branch_policy {
-    protected_branches     = false
-    custom_branch_policies = true
+    protected_branches     = true
+    custom_branch_policies = false
   }
-}
-
-resource "github_repository_environment_deployment_policy" "infrastructure_organization" {
-  repository     = github_repository.infrastructure.name
-  environment    = github_repository_environment.infrastructure_organization.environment
-  branch_pattern = "master"
-}
-
-resource "github_repository_environment_deployment_policy" "infrastructure_development" {
-  repository     = github_repository.infrastructure.name
-  environment    = github_repository_environment.infrastructure_development.environment
-  branch_pattern = "master"
 }
 
 module "s3_bucket_terraform_state" {
