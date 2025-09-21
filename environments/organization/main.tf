@@ -12,93 +12,20 @@ resource "github_membership" "veselyn" {
   role     = "admin"
 }
 
-data "github_user" "veselyn" {
-  username = "veselyn"
+locals {
+  default_branch = "master"
 }
 
-resource "github_repository" "infrastructure" {
-  name                   = "infrastructure"
-  visibility             = "public"
-  auto_init              = true
-  delete_branch_on_merge = true
-  allow_merge_commit     = true
-  allow_squash_merge     = false
-  allow_rebase_merge     = false
-}
+module "github_repositories" {
+  source = "../../modules/github/repository"
 
-resource "github_branch_default" "default" {
-  repository = github_repository.infrastructure.name
-  branch     = "master"
-  rename     = true
-}
-
-resource "github_repository_ruleset" "infrastructure" {
-  name        = "master"
-  repository  = github_repository.infrastructure.name
-  target      = "branch"
-  enforcement = "active"
-
-  conditions {
-    ref_name {
-      include = ["refs/heads/master"]
-      exclude = []
-    }
+  for_each = {
+    infrastructure = { environments = ["organization", "development"] }
   }
 
-  bypass_actors {
-    actor_id    = 0
-    actor_type  = "OrganizationAdmin"
-    bypass_mode = "pull_request"
-  }
-
-  rules {
-    merge_queue {
-      merge_method = "MERGE"
-    }
-
-    pull_request {
-      dismiss_stale_reviews_on_push   = true
-      require_last_push_approval      = false # true
-      required_approving_review_count = 0     # 1
-    }
-
-    required_status_checks {
-      required_check {
-        context = "Check Flake"
-      }
-      required_check {
-        context = "Succeed"
-      }
-    }
-  }
-}
-
-resource "github_repository_environment" "infrastructure_organization" {
-  environment = "organization"
-  repository  = github_repository.infrastructure.name
-
-  reviewers {
-    users = [data.github_user.veselyn.id]
-  }
-
-  deployment_branch_policy {
-    protected_branches     = true
-    custom_branch_policies = false
-  }
-}
-
-resource "github_repository_environment" "infrastructure_development" {
-  environment = "development"
-  repository  = github_repository.infrastructure.name
-
-  reviewers {
-    users = [data.github_user.veselyn.id]
-  }
-
-  deployment_branch_policy {
-    protected_branches     = true
-    custom_branch_policies = false
-  }
+  name           = each.key
+  default_branch = local.default_branch
+  environments   = try(each.value.environments, [])
 }
 
 module "s3_bucket_terraform_state" {
