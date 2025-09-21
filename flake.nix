@@ -2,10 +2,10 @@
   description = "infrastructure";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     flake-parts.url = "github:hercules-ci/flake-parts/main";
     treefmt-nix.url = "github:numtide/treefmt-nix/main";
-    devenv.url = "github:cachix/devenv/main";
+    devenv.url = "github:cachix/devenv/v1.9";
   };
 
   outputs = inputs @ {flake-parts, ...}:
