@@ -20,14 +20,12 @@ module "github_repositories" {
   source = "../../modules/github/repository"
 
   for_each = {
-    infrastructure = {
-      environments = ["organization", "development"]
-    }
+    infrastructure = { environments = ["organization", "development"] }
   }
 
   name           = each.key
   default_branch = local.default_branch
-  environments   = each.value.environments
+  environments   = try(each.value.environments, [])
 }
 
 module "s3_bucket_terraform_state" {

@@ -1,13 +1,15 @@
 variable "name" {
   type        = string
-  description = "The name of the GitHub repository"
+  description = "Name of the repository"
 }
 
 variable "default_branch" {
   type        = string
-  description = "The default branch to use for the GitHub repository"
+  description = "Default branch to use for the repository"
 }
 
 variable "environments" {
-  type = set(string)
+  type        = set(string)
+  description = "Environments for which to require reviews"
+  default     = []
 }
