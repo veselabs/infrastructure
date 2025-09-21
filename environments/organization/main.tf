@@ -64,6 +64,9 @@ resource "github_repository_ruleset" "infrastructure" {
 
     required_status_checks {
       required_check {
+        context = "Check Flake"
+      }
+      required_check {
         context = "Succeed"
       }
     }
