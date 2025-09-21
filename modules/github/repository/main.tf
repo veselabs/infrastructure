@@ -3,13 +3,17 @@ data "github_user" "veselyn" {
 }
 
 resource "github_repository" "this" {
-  name                   = var.name
-  visibility             = "public"
-  auto_init              = true
+  name       = var.name
+  visibility = "public"
+  auto_init  = true
+
   delete_branch_on_merge = true
-  allow_merge_commit     = true
-  allow_squash_merge     = false
-  allow_rebase_merge     = false
+
+  allow_merge_commit = true
+  allow_squash_merge = false
+  allow_rebase_merge = false
+
+  has_issues = var.has_issues
 }
 
 resource "github_branch_default" "this" {
