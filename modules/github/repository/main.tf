@@ -23,6 +23,8 @@ resource "github_branch_default" "this" {
 }
 
 resource "github_repository_ruleset" "this" {
+  depends_on = [github_branch_default.this]
+
   name        = var.default_branch
   repository  = github_repository.this.name
   target      = "branch"
