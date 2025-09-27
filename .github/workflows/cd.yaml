@@ -24,51 +24,6 @@ jobs:
     uses: ./.github/workflows/ci.yaml
     secrets: inherit
 
-  check_if_applyable:
-    name: Check if applyable
-    strategy:
-      matrix:
-        environment: [organization, development]
-    runs-on: ubuntu-latest
-    needs: [ci]
-    outputs:
-      organization: ${{ steps.check_if_applyable.outputs.organization }}
-      development: ${{ steps.check_if_applyable.outputs.development }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Install Nix
-        uses: nixbuild/nix-quick-install-action@v33
-
-      - name: Cache Nix Store
-        uses: nix-community/cache-nix-action@v6
-        with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-
-          purge: true
-          purge-prefixes: nix-${{ runner.os }}-
-          purge-primary-key: never
-
-      - name: Initialize Terraform
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init
-
-      - name: Download Plan Artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: plan-${{ matrix.environment }}-${{ github.sha }}
-          path: ./environments/${{ matrix.environment }}
-
-      - name: Check if applyable
-        id: check_if_applyable
-        working-directory: ./environments/${{ matrix.environment }}
-        run: |
-          set -euo pipefail
-          applyable=$(nix develop .#ci -c terraform show -json ./plan | jq '.applyable')
-          echo "${{ matrix.environment }}=${applyable}" >> "${GITHUB_OUTPUTS}"
-
   apply:
     name: Apply
     strategy:
@@ -76,8 +31,7 @@ jobs:
         environment: [organization, development]
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
-    needs: [check_if_applyable]
-    if: needs.check_if_applyable.outputs[matrix.environment]
+    needs: [ci]
 
     steps:
       - name: Checkout
