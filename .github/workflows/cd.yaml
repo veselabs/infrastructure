@@ -25,7 +25,6 @@ jobs:
       matrix:
         environment: [organization, development]
     runs-on: ubuntu-latest
-    environment: ${{ matrix.environment }}
 
     steps:
       - name: Checkout
@@ -51,6 +50,10 @@ jobs:
           ref: ${{ github.sha }}
           name: plan-${{ matrix.environment }}-${{ github.sha }}
           path: ./environments/${{ matrix.environment }}
+
+      - name: Initialize Terraform
+        working-directory: ./environments/${{ matrix.environment }}
+        run: nix develop .#ci -c terraform init -backend=false
 
       - name: Show Plan
         working-directory: ./environments/${{ matrix.environment }}
