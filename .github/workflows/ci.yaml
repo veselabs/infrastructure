@@ -123,7 +123,7 @@ jobs:
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.sha }}-plan-${{ matrix.environment }}
+          name: plan-${{ matrix.environment }}-${{ github.sha }}
           path: ./environments/${{ matrix.environment }}/plan
 
   succeed:
