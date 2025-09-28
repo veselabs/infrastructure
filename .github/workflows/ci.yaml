@@ -76,7 +76,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init
+        run: nix develop .#ci -c terraform init -backend=false
 
       - name: Validate Terraform
         working-directory: ./environments/${{ matrix.environment }}
@@ -120,14 +120,10 @@ jobs:
         working-directory: ./environments/${{ matrix.environment }}
         run: nix develop .#ci -c terraform plan -out=./plan
 
-      - name: Show Plan
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform show ./plan
-
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: plan-${{ matrix.environment }}-${{ github.sha }}
+          name: ${{ github.sha }}-plan-${{ matrix.environment }}
           path: ./environments/${{ matrix.environment }}/plan
 
   succeed:
