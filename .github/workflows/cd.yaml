@@ -38,7 +38,10 @@ jobs:
 
       - name: Download Plan Artifact
         uses: dawidd6/action-download-artifact@v11
-        with: {}
+        with:
+          workflow: ci.yaml
+          workflow_conclusion: success
+          ref: ${{ github.sha }}
 
       - name: Tree
         run: tree
