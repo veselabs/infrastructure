@@ -19,7 +19,7 @@ env:
 
 jobs:
   skip:
-    name: Check if skipping
+    name: Check If Skipping
     runs-on: ubuntu-latest
     outputs:
       skip: ${{ steps.merge-queue-ci-skipper.outputs.skip-check }}
@@ -63,7 +63,7 @@ jobs:
         run: nix fmt -- --ci
 
   validate:
-    name: Validate
+    name: Validate Configuration
     strategy:
       matrix:
         environment: [organization, development]
@@ -96,12 +96,12 @@ jobs:
         working-directory: ./environments/${{ matrix.environment }}
         run: nix develop .#ci -c terraform init -backend=false
 
-      - name: Validate Terraform
+      - name: Validate Configuration
         working-directory: ./environments/${{ matrix.environment }}
         run: nix develop .#ci -c terraform validate
 
   plan:
-    name: Plan
+    name: Create Plan
     strategy:
       matrix:
         environment: [organization, development]
