@@ -19,7 +19,7 @@ jobs:
     outputs:
       skip: ${{ steps.merge-queue-ci-skipper.outputs.skip-check }}
     steps:
-      - name: Check if skipping
+      - name: Check If Skipping
         id: merge-queue-ci-skipper
         uses: cariad-tech/merge-queue-ci-skipper@main
 
