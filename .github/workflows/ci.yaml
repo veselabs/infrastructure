@@ -12,11 +12,6 @@ permissions:
   contents: read
   id-token: write
 
-env:
-  GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
-  GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
-  GITHUB_APP_PEM_FILE: ${{ secrets.GH_APP_PEM_FILE }}
-
 jobs:
   skip:
     name: Check If Skipping
@@ -99,6 +94,10 @@ jobs:
       - name: Validate Configuration
         working-directory: ./environments/${{ matrix.environment }}
         run: nix develop .#ci -c terraform validate
+        env:
+          GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
+          GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
+          GITHUB_APP_PEM_FILE: ${{ secrets.GH_APP_PEM_FILE }}
 
   plan:
     name: Create Plan
@@ -137,6 +136,10 @@ jobs:
       - name: Create Plan
         working-directory: ./environments/${{ matrix.environment }}
         run: nix develop .#ci -c terraform plan -out=./plan
+        env:
+          GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
+          GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
+          GITHUB_APP_PEM_FILE: ${{ secrets.GH_APP_PEM_FILE }}
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4

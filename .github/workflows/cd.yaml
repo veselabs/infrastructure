@@ -9,15 +9,6 @@ permissions:
   contents: read
   id-token: write
 
-env:
-  GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
-  GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
-  GITHUB_APP_PEM_FILE: ${{ secrets.GH_APP_PEM_FILE }}
-
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
   plan:
     name: Show plan
@@ -65,6 +56,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
     needs: [plan]
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout
@@ -102,3 +96,7 @@ jobs:
       - name: Apply Plan
         working-directory: ./environments/${{ matrix.environment }}
         run: nix develop .#ci -c terraform apply -auto-approve ./plan
+        env:
+          GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
+          GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
+          GITHUB_APP_PEM_FILE: ${{ secrets.GH_APP_PEM_FILE }}
