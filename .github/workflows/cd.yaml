@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   plan:
-    name: Show plan
+    name: Show Plan
     strategy:
       matrix:
         environment: [organization, development]
