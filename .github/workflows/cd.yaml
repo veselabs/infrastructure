@@ -9,18 +9,9 @@ permissions:
   contents: read
   id-token: write
 
-env:
-  GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
-  GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
-  GITHUB_APP_PEM_FILE: ${{ secrets.GH_APP_PEM_FILE }}
-
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
   plan:
-    name: Show plan
+    name: Show Plan
     strategy:
       matrix:
         environment: [organization, development]
@@ -42,31 +33,32 @@ jobs:
           purge-prefixes: nix-${{ runner.os }}-
           purge-primary-key: never
 
-      - name: Download Plan Artifact
-        uses: dawidd6/action-download-artifact@v11
-        with:
-          workflow: ci.yaml
-          workflow_conclusion: success
-          ref: ${{ github.sha }}
-          name: plan-${{ matrix.environment }}-${{ github.sha }}
-          path: ./environments/${{ matrix.environment }}
-
       - name: Initialize Terraform
         working-directory: ./environments/${{ matrix.environment }}
         run: nix develop .#ci -c terraform init -backend=false
+
+      - name: Download Plan Artifact
+        uses: dawidd6/action-download-artifact@v11
+        with:
+          ref: ${{ github.sha }}
+          name: plan-${{ matrix.environment }}-${{ github.sha }}
+          path: ./environments/${{ matrix.environment }}
 
       - name: Show Plan
         working-directory: ./environments/${{ matrix.environment }}
         run: nix develop .#ci -c terraform show ./plan
 
   apply:
-    name: Apply
+    name: Apply Plan
     strategy:
       matrix:
         environment: [organization, development]
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
     needs: [plan]
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout
@@ -97,8 +89,6 @@ jobs:
       - name: Download Plan Artifact
         uses: dawidd6/action-download-artifact@v11
         with:
-          workflow: ci.yaml
-          workflow_conclusion: success
           ref: ${{ github.sha }}
           name: plan-${{ matrix.environment }}-${{ github.sha }}
           path: ./environments/${{ matrix.environment }}
@@ -106,3 +96,7 @@ jobs:
       - name: Apply Plan
         working-directory: ./environments/${{ matrix.environment }}
         run: nix develop .#ci -c terraform apply -auto-approve ./plan
+        env:
+          GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
+          GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
+          GITHUB_APP_PEM_FILE: ${{ secrets.GH_APP_PEM_FILE }}
