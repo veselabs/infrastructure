@@ -40,7 +40,7 @@ jobs:
       - name: Download Plan Artifact
         uses: dawidd6/action-download-artifact@v11
         with:
-          search_artifacts: true
+          workflow_search: true
           ref: ${{ github.sha }}
           name: plan-${{ matrix.environment }}-${{ github.sha }}
           path: ./environments/${{ matrix.environment }}
