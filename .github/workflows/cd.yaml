@@ -33,16 +33,16 @@ jobs:
           purge-prefixes: nix-${{ runner.os }}-
           purge-primary-key: never
 
+      - name: Initialize Terraform
+        working-directory: ./environments/${{ matrix.environment }}
+        run: nix develop .#ci -c terraform init -backend=false
+
       - name: Download Plan Artifact
         uses: dawidd6/action-download-artifact@v11
         with:
           ref: ${{ github.sha }}
           name: plan-${{ matrix.environment }}-${{ github.sha }}
           path: ./environments/${{ matrix.environment }}
-
-      - name: Initialize Terraform
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init -backend=false
 
       - name: Show Plan
         working-directory: ./environments/${{ matrix.environment }}
