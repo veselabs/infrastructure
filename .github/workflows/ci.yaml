@@ -13,27 +13,9 @@ permissions:
   id-token: write
 
 jobs:
-  skip:
-    name: Check If Skipping
-    runs-on: ubuntu-latest
-    outputs:
-      skip: ${{ steps.merge-queue-ci-skipper.outputs.skip-check }}
-    steps:
-      - name: Check If Skipping
-        id: merge-queue-ci-skipper
-        uses: cariad-tech/merge-queue-ci-skipper@main
-
-  continue:
-    name: Continuing
-    runs-on: ubuntu-latest
-    needs: [skip]
-    if: needs.skip.outputs.skip == 'false'
-    steps: [{ run: "true" }]
-
   flake:
     name: Check Flake
     runs-on: ubuntu-latest
-    needs: [continue]
 
     steps:
       - name: Checkout
@@ -63,7 +45,6 @@ jobs:
       matrix:
         environment: [organization, development]
     runs-on: ubuntu-latest
-    needs: [continue]
 
     steps:
       - name: Checkout
@@ -106,7 +87,6 @@ jobs:
         environment: [organization, development]
     runs-on: ubuntu-latest
     needs:
-      - continue
       - validate
 
     steps:

@@ -40,11 +40,6 @@ jobs:
       - name: Download Plan Artifact
         uses: dawidd6/action-download-artifact@v11
         with:
-          workflow: ci.yaml
-          workflow_conclusion: success
-          workflow_search: true
-          check_artifacts: true
-          search_artifacts: true
           ref: ${{ github.sha }}
           name: plan-${{ matrix.environment }}-${{ github.sha }}
           path: ./environments/${{ matrix.environment }}
@@ -60,7 +55,8 @@ jobs:
         environment: [organization, development]
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
-    needs: [plan]
+    needs:
+      - plan
     concurrency:
       group: ${{ github.workflow }}
       cancel-in-progress: true
