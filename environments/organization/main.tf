@@ -24,11 +24,10 @@ module "github_repositories" {
     issues         = { has_issues = true }
   }
 
-  name            = each.key
-  default_branch  = local.default_branch
-  has_issues      = try(each.value.has_issues, false)
-  has_merge_queue = try(each.value.has_merge_queue, false)
-  environments    = try(each.value.environments, [])
+  name           = each.key
+  default_branch = local.default_branch
+  has_issues     = try(each.value.has_issues, false)
+  environments   = try(each.value.environments, [])
 }
 
 module "s3_bucket_terraform_state" {

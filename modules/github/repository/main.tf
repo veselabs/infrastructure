@@ -9,8 +9,8 @@ resource "github_repository" "this" {
 
   delete_branch_on_merge = true
 
-  allow_merge_commit = false
-  allow_squash_merge = true
+  allow_merge_commit = true
+  allow_squash_merge = false
   allow_rebase_merge = false
 
   has_issues = var.has_issues
@@ -44,11 +44,8 @@ resource "github_repository_ruleset" "this" {
   }
 
   rules {
-    dynamic "merge_queue" {
-      for_each = var.has_merge_queue ? [true] : []
-      content {
-        merge_method = "SQUASH"
-      }
+    merge_queue {
+      merge_method = "MERGE"
     }
 
     pull_request {
@@ -58,9 +55,12 @@ resource "github_repository_ruleset" "this" {
     }
 
     required_status_checks {
-      strict_required_status_checks_policy = !var.has_merge_queue
-      required_check { context = "Check Flake" }
-      required_check { context = "Succeed" }
+      required_check {
+        context = "Check Flake"
+      }
+      required_check {
+        context = "Succeed"
+      }
     }
   }
 }

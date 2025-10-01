@@ -14,12 +14,6 @@ variable "has_issues" {
   default     = false
 }
 
-variable "has_merge_queue" {
-  type        = bool
-  description = "Whether to merge via a merge queue"
-  default     = false
-}
-
 variable "environments" {
   type        = set(string)
   description = "Environments for which to require reviews"
