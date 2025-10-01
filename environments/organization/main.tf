@@ -24,11 +24,10 @@ module "github_repositories" {
     issues         = { has_issues = true }
   }
 
-  name            = each.key
-  default_branch  = local.default_branch
-  has_issues      = try(each.value.has_issues, false)
-  has_merge_queue = try(each.value.has_merge_queue, false)
-  environments    = try(each.value.environments, [])
+  name           = each.key
+  default_branch = local.default_branch
+  has_issues     = try(each.value.has_issues, false)
+  environments   = try(each.value.environments, [])
 }
 
 module "s3_bucket_terraform_state" {
@@ -53,44 +52,16 @@ module "iam_oidc_provider" {
   url = "https://token.actions.githubusercontent.com"
 }
 
-module "iam_role_github_oidc_infrastructure_read" {
+module "iam_role_github_oidc" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role"
   version = "~> 6.2.1"
 
   enable_github_oidc = true
 
-  name            = "gha-infrastructure-read"
+  name            = "gha-infrastructure"
   use_name_prefix = false
 
   oidc_wildcard_subjects = ["veselabs/infrastructure:*"]
-
-  policies = {
-    ReadOnlyAccess = "arn:aws:iam::aws:policy/ReadOnlyAccess"
-  }
-
-  create_inline_policy = true
-  inline_policy_permissions = {
-    DenyPlanUpgrade = {
-      effect    = "Deny",
-      actions   = ["freetier:UpgradeAccountPlan"]
-      resources = ["*"]
-    }
-  }
-}
-
-module "iam_role_github_oidc_infrastructure_write" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role"
-  version = "~> 6.2.1"
-
-  enable_github_oidc = true
-
-  name            = "gha-infrastructure-write"
-  use_name_prefix = false
-
-  oidc_wildcard_subjects = [
-    "veselabs/infrastructure:environment:organization",
-    "veselabs/infrastructure:environment:development",
-  ]
 
   policies = {
     AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
