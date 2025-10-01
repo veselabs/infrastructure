@@ -44,8 +44,11 @@ resource "github_repository_ruleset" "this" {
   }
 
   rules {
-    merge_queue {
-      merge_method = "SQUASH"
+    dynamic "merge_queue" {
+      for_each = var.has_merge_queue ? [true] : []
+      content {
+        merge_method = "SQUASH"
+      }
     }
 
     pull_request {
@@ -55,12 +58,9 @@ resource "github_repository_ruleset" "this" {
     }
 
     required_status_checks {
-      required_check {
-        context = "Check Flake"
-      }
-      required_check {
-        context = "Succeed"
-      }
+      strict_required_status_checks_policy = !var.has_merge_queue
+      required_check { context = "Check Flake" }
+      required_check { context = "Succeed" }
     }
   }
 }
