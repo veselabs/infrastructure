@@ -42,6 +42,7 @@ jobs:
         with:
           workflow: ci.yaml
           workflow_conclusion: success
+          workflow_search: true
           search_artifacts: true
           ref: ${{ github.sha }}
           name: plan-${{ matrix.environment }}-${{ github.sha }}
