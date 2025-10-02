@@ -4,7 +4,7 @@ data "github_user" "veselyn" {
 
 resource "github_repository" "this" {
   name       = var.name
-  visibility = "public"
+  visibility = var.visibility
   auto_init  = true
 
   delete_branch_on_merge = true

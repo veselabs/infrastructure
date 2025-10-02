@@ -3,6 +3,12 @@ variable "name" {
   description = "Name of the repository"
 }
 
+variable "visibility" {
+  type        = string
+  description = "Visibility of the repository"
+  default     = "public"
+}
+
 variable "default_branch" {
   type        = string
   description = "Default branch to use for the repository"
