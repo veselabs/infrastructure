@@ -20,7 +20,7 @@ module "github_repositories" {
   source = "../../modules/github/repository"
 
   for_each = {
-    infrastructure = { environments = ["organization", "development"] }
+    infrastructure = { environments = ["bootstrap", "organization"] }
     issues         = { has_issues = true }
   }
 
