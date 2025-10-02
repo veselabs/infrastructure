@@ -55,10 +55,8 @@ jobs:
         run: nix develop .#ci -c terraform init
 
       - name: Download Plan Artifact
-        uses: dawidd6/action-download-artifact@v11
+        uses: actions/download-artifact@v5
         with:
-          workflow_search: true
-          ref: ${{ github.sha }}
           name: plan-${{ matrix.environment }}-${{ github.sha }}
           path: ./environments/${{ matrix.environment }}
 
