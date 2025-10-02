@@ -68,7 +68,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
-          role-to-assume: arn:aws:iam::519848832156:role/gha-infrastructure
+          role-to-assume: arn:aws:iam::519848832156:role/gha-infrastructure-read
           aws-region: eu-north-1
 
       - name: Install Nix
@@ -110,7 +110,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
-          role-to-assume: arn:aws:iam::519848832156:role/gha-infrastructure
+          role-to-assume: arn:aws:iam::519848832156:role/gha-infrastructure-read
           aws-region: eu-north-1
 
       - name: Install Nix
