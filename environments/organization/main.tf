@@ -39,31 +39,6 @@ module "iam_oidc_provider" {
   url = "https://token.actions.githubusercontent.com"
 }
 
-module "iam_role_github_oidc" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role"
-  version = "~> 6.2.1"
-
-  enable_github_oidc = true
-
-  name            = "gha-infrastructure"
-  use_name_prefix = false
-
-  oidc_wildcard_subjects = ["veselabs/infrastructure:*"]
-
-  policies = {
-    AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
-  }
-
-  create_inline_policy = true
-  inline_policy_permissions = {
-    DenyPlanUpgrade = {
-      effect    = "Deny",
-      actions   = ["freetier:UpgradeAccountPlan"]
-      resources = ["*"]
-    }
-  }
-}
-
 module "iam_role_github_oidc_read" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role"
   version = "~> 6.2.1"
