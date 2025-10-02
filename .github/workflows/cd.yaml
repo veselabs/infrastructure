@@ -51,7 +51,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init
+        run: nix develop .#ci -c terraform init -lock-timeout=1m
 
       - name: Download Plan Artifact
         uses: actions/download-artifact@v5
@@ -61,7 +61,7 @@ jobs:
 
       - name: Apply Plan
         working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform apply -auto-approve ./plan
+        run: nix develop .#ci -c terraform apply -lock-timeout=1m -auto-approve ./plan
         env:
           GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
           GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
