@@ -101,8 +101,7 @@ jobs:
       matrix:
         environment: [organization, development]
     runs-on: ubuntu-latest
-    needs:
-      - validate
+    needs: [validate]
 
     steps:
       - name: Checkout
