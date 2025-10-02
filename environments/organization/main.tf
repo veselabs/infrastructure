@@ -79,8 +79,13 @@ module "iam_role_github_oidc_read" {
 
   create_inline_policy = true
   inline_policy_permissions = {
+    AllowS3BucketAccess = {
+      effect    = "Allow"
+      actions   = ["s3:PutObject"]
+      resources = ["arn:aws:s3:::veselabs-terraform-state/*/terraform.tfstate.tflock"]
+    }
     DenyPlanUpgrade = {
-      effect    = "Deny",
+      effect    = "Deny"
       actions   = ["freetier:UpgradeAccountPlan"]
       resources = ["*"]
     }
@@ -108,7 +113,7 @@ module "iam_role_github_oidc_write" {
   create_inline_policy = true
   inline_policy_permissions = {
     DenyPlanUpgrade = {
-      effect    = "Deny",
+      effect    = "Deny"
       actions   = ["freetier:UpgradeAccountPlan"]
       resources = ["*"]
     }
