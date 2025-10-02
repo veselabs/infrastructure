@@ -10,44 +10,10 @@ permissions:
   id-token: write
 
 jobs:
-  plan:
-    name: Show Plan
-    strategy:
-      matrix:
-        environment: [organization, development]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Install Nix
-        uses: nixbuild/nix-quick-install-action@v33
-
-      - name: Cache Nix Store
-        uses: nix-community/cache-nix-action@v6
-        with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-
-          purge: true
-          purge-prefixes: nix-${{ runner.os }}-
-          purge-primary-key: never
-
-      - name: Initialize Terraform
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init -backend=false
-
-      - name: Download Plan Artifact
-        uses: dawidd6/action-download-artifact@v11
-        with:
-          workflow_search: true
-          ref: ${{ github.sha }}
-          name: plan-${{ matrix.environment }}-${{ github.sha }}
-          path: ./environments/${{ matrix.environment }}
-
-      - name: Show Plan
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform show ./plan
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yaml
+    secrets: inherit
 
   apply:
     name: Apply Plan
@@ -57,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
     needs:
-      - plan
+      - ci
     concurrency:
       group: ${{ github.workflow }}-${{ matrix.environment }}
       cancel-in-progress: true
