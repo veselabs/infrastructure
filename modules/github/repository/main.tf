@@ -9,8 +9,8 @@ resource "github_repository" "this" {
 
   delete_branch_on_merge = true
 
-  allow_merge_commit = true
-  allow_squash_merge = false
+  allow_merge_commit = false
+  allow_squash_merge = true
   allow_rebase_merge = false
 
   has_issues = var.has_issues
@@ -45,7 +45,7 @@ resource "github_repository_ruleset" "this" {
 
   rules {
     merge_queue {
-      merge_method = "MERGE"
+      merge_method = "SQUASH"
     }
 
     pull_request {
