@@ -81,7 +81,7 @@ module "iam_role_github_oidc_read" {
   inline_policy_permissions = {
     AllowS3BucketAccess = {
       effect    = "Allow"
-      actions   = ["s3:PutObject"]
+      actions   = ["s3:PutObject", "s3:DeleteObject"]
       resources = ["arn:aws:s3:::veselabs-terraform-state/*/terraform.tfstate.tflock"]
     }
     DenyPlanUpgrade = {
