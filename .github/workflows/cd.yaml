@@ -19,7 +19,7 @@ jobs:
     name: Apply Plan
     strategy:
       matrix:
-        environment: [organization, development]
+        environment: [bootstrap, organization]
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
     needs: [ci]
