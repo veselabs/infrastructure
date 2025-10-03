@@ -71,7 +71,12 @@
 
         devShells.ci = pkgs.mkShellNoCC {
           packages = builtins.attrValues {
-            inherit (pkgs) terraform;
+            inherit
+              (pkgs)
+              just
+              terraform
+              terraform-docs
+              ;
           };
         };
 
