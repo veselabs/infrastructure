@@ -17,7 +17,7 @@ locals {
 }
 
 module "github_repositories" {
-  source = "../../modules/github/repository"
+  source = "../../modules/github-repository"
 
   for_each = {
     infrastructure = { environments = ["bootstrap", "organization"] }

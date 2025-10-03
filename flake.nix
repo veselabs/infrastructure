@@ -47,9 +47,15 @@
                 terraform.enable = true;
               };
 
-              packages = [
-                self'.formatter
-              ];
+              packages =
+                [self'.formatter]
+                ++ builtins.attrValues {
+                  inherit
+                    (pkgs)
+                    just
+                    terraform-docs
+                    ;
+                };
 
               git-hooks.hooks = {
                 deadnix.enable = true;
@@ -65,7 +71,12 @@
 
         devShells.ci = pkgs.mkShellNoCC {
           packages = builtins.attrValues {
-            inherit (pkgs) terraform;
+            inherit
+              (pkgs)
+              just
+              terraform
+              terraform-docs
+              ;
           };
         };
 
