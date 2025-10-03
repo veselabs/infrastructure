@@ -4,5 +4,4 @@
 /result
 /result-*
 
-.terraform.lock.hcl
 .terraform/
