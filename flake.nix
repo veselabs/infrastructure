@@ -47,9 +47,15 @@
                 terraform.enable = true;
               };
 
-              packages = [
-                self'.formatter
-              ];
+              packages =
+                [self'.formatter]
+                ++ builtins.attrValues {
+                  inherit
+                    (pkgs)
+                    just
+                    terraform-docs
+                    ;
+                };
 
               git-hooks.hooks = {
                 deadnix.enable = true;
