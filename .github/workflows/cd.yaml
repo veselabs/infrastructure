@@ -37,17 +37,8 @@ jobs:
           role-to-assume: arn:aws:iam::519848832156:role/gha-infrastructure-write
           aws-region: eu-north-1
 
-      - name: Install Nix
-        uses: nixbuild/nix-quick-install-action@v33
-
-      - name: Cache Nix Store
-        uses: nix-community/cache-nix-action@v6
-        with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-
-          purge: true
-          purge-prefixes: nix-${{ runner.os }}-
-          purge-primary-key: never
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
 
       - name: Initialize Terraform
         working-directory: ./environments/${{ matrix.environment }}
