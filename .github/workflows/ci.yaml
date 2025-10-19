@@ -46,6 +46,7 @@ jobs:
   validate:
     name: Validate Configuration
     strategy:
+      fail-fast: false
       matrix:
         environment: [bootstrap, organization]
     runs-on: ubuntu-latest
@@ -83,6 +84,7 @@ jobs:
   plan:
     name: Create Plan
     strategy:
+      fail-fast: false
       matrix:
         environment: [bootstrap, organization]
     runs-on: ubuntu-latest

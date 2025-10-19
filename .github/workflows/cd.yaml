@@ -18,6 +18,7 @@ jobs:
   apply:
     name: Apply Plan
     strategy:
+      fail-fast: false
       matrix:
         environment: [bootstrap, organization]
     runs-on: ubuntu-latest
