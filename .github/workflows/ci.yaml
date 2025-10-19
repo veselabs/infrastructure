@@ -67,7 +67,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init -lock-timeout=1m -backend=false
+        run: nix develop .#ci -c terraform init -lock-timeout=1m -lockfile=readonly -backend=false
 
       - name: Validate Configuration
         working-directory: ./environments/${{ matrix.environment }}
@@ -103,7 +103,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init -lock-timeout=1m
+        run: nix develop .#ci -c terraform init -lock-timeout=1m -lockfile=readonly
 
       - name: Create Plan
         working-directory: ./environments/${{ matrix.environment }}

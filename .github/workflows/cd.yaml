@@ -42,7 +42,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init -lock-timeout=1m
+        run: nix develop .#ci -c terraform init -lock-timeout=1m -lockfile=readonly
 
       - name: Download Plan Artifact
         uses: actions/download-artifact@v5
