@@ -46,6 +46,7 @@ jobs:
   validate:
     name: Validate Configuration
     strategy:
+      fail-fast: false
       matrix:
         environment: [bootstrap, organization]
     runs-on: ubuntu-latest
@@ -67,7 +68,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init -lock-timeout=1m -backend=false
+        run: nix develop .#ci -c terraform init -input=false -lock-timeout=1m -lockfile=readonly -backend=false
 
       - name: Validate Configuration
         working-directory: ./environments/${{ matrix.environment }}
@@ -83,6 +84,7 @@ jobs:
   plan:
     name: Create Plan
     strategy:
+      fail-fast: false
       matrix:
         environment: [bootstrap, organization]
     runs-on: ubuntu-latest
@@ -103,11 +105,11 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init -lock-timeout=1m
+        run: nix develop .#ci -c terraform init -input=false -lock-timeout=1m -lockfile=readonly
 
       - name: Create Plan
         working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform plan -lock-timeout=1m -out=./plan
+        run: nix develop .#ci -c terraform plan -input=false -lock-timeout=1m -out=./plan
         env:
           GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
           GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}

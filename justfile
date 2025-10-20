@@ -26,3 +26,15 @@ generate-docs +environments='./environments/*':
             --recursive-path=../../modules \
             --output-file=README.md
     done
+
+# Locks the Terraform providers for the environments
+lock-providers +environments='./environments/*':
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    for environment in {{ environments }}; do
+        terraform -chdir="${environment}" providers lock \
+            -platform=darwin_amd64 \
+            -platform=darwin_arm64 \
+            -platform=linux_amd64 \
+            -platform=linux_arm64
+    done

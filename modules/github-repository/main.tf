@@ -24,17 +24,16 @@ resource "github_branch_default" "this" {
 }
 
 resource "github_repository_ruleset" "this" {
-  count      = var.visibility == "public" ? 1 : 0
-  depends_on = [github_branch_default.this]
+  count = var.visibility == "public" ? 1 : 0
 
-  name        = var.default_branch
+  name        = github_branch_default.this.branch
   repository  = github_repository.this.name
   target      = "branch"
   enforcement = "active"
 
   conditions {
     ref_name {
-      include = ["refs/heads/${var.default_branch}"]
+      include = ["refs/heads/${github_branch_default.this.branch}"]
       exclude = []
     }
   }
