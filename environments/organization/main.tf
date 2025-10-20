@@ -7,13 +7,13 @@ provider "aws" {
   region = "eu-north-1"
 }
 
+locals {
+  default_branch = "master"
+}
+
 resource "github_membership" "veselyn" {
   username = "veselyn"
   role     = "admin"
-}
-
-locals {
-  default_branch = "master"
 }
 
 module "github_repositories" {
