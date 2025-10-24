@@ -61,6 +61,13 @@
                 deadnix.enable = true;
                 end-of-file-fixer.enable = true;
                 statix.enable = true;
+                terraform-docs = {
+                  enable = true;
+                  entry = "just check-docs";
+                  files = "\\.tf$";
+                  pass_filenames = false;
+                };
+                tflint.enable = true;
                 treefmt.enable = true;
                 treefmt.package = self'.formatter;
                 trim-trailing-whitespace.enable = true;
