@@ -8,14 +8,9 @@ on:
   workflow_call:
   workflow_dispatch:
 
-permissions:
-  actions: read
-  contents: read
-  id-token: write
-
 jobs:
   start:
-    name: Starting
+    name: Start
     runs-on: ubuntu-latest
     outputs:
       start: ${{ steps.merge-queue-ci-skipper.outputs.skip-check == 'false' }}
@@ -43,93 +38,12 @@ jobs:
       - name: Format
         run: nix fmt -- --ci
 
-  validate:
-    name: Validate Configuration
-    strategy:
-      fail-fast: false
-      matrix:
-        environment: [bootstrap, organization]
-    runs-on: ubuntu-latest
-    needs: [start]
-    if: needs.start.outputs.start == 'true'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
-        with:
-          role-to-assume: arn:aws:iam::519848832156:role/gha-infrastructure-read
-          aws-region: eu-north-1
-
-      - name: Setup Nix
-        uses: ./.github/actions/setup-nix
-
-      - name: Initialize Terraform
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init -input=false -lock-timeout=1m -lockfile=readonly -backend=false
-
-      - name: Validate Configuration
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform validate
-        env:
-          GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
-          GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
-          GITHUB_APP_PEM_FILE: ${{ secrets.GH_APP_PEM_FILE }}
-
-      - name: Validate Terraform Docs
-        run: nix develop .#ci -c just check-docs ./environments/${{ matrix.environment }}
-
-  plan:
-    name: Create Plan
-    strategy:
-      fail-fast: false
-      matrix:
-        environment: [bootstrap, organization]
-    runs-on: ubuntu-latest
-    needs: [validate]
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
-        with:
-          role-to-assume: arn:aws:iam::519848832156:role/gha-infrastructure-read
-          aws-region: eu-north-1
-
-      - name: Setup Nix
-        uses: ./.github/actions/setup-nix
-
-      - name: Initialize Terraform
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform init -input=false -lock-timeout=1m -lockfile=readonly
-
-      - name: Create Plan
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform plan -input=false -lock-timeout=1m -out=./plan
-        env:
-          GITHUB_APP_ID: ${{ secrets.GH_APP_ID }}
-          GITHUB_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
-          GITHUB_APP_PEM_FILE: ${{ secrets.GH_APP_PEM_FILE }}
-
-      - name: Show Plan
-        working-directory: ./environments/${{ matrix.environment }}
-        run: nix develop .#ci -c terraform show ./plan
-
-      - name: Upload Plan Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: plan-${{ matrix.environment }}-${{ github.sha }}
-          path: ./environments/${{ matrix.environment }}/plan
+      - name: Test
+        run: nix develop .# --impure --command devenv test
 
   succeed:
     name: Succeed
     runs-on: ubuntu-latest
     needs:
       - flake
-      - validate
-      - plan
     steps: [{ run: "true" }]

@@ -76,17 +76,6 @@
           ];
         };
 
-        devShells.ci = pkgs.mkShellNoCC {
-          packages = builtins.attrValues {
-            inherit
-              (pkgs)
-              just
-              terraform
-              terraform-docs
-              ;
-          };
-        };
-
         packages = {
           devenv-test = self'.devShells.default.config.test;
           devenv-up = self'.devShells.default.config.procfileScript;
