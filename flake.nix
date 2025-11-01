@@ -52,6 +52,7 @@
                 ++ builtins.attrValues {
                   inherit
                     (pkgs)
+                    awscli2
                     just
                     terraform-docs
                     ;
